@@ -26,6 +26,6 @@
 - [x] 定位並移除前台所有 QA／問題解答顯示內容
 - [x] 驗證局前規劃、新手引導與知識庫瀏覽不再呈現 QA，且其餘內容正常
 - [x] 建立移除 QA 顯示後的版本快照並交付可預覽版本
-- [ ] 盤點既有 Eat_will repository 與目前 Web 應用同步範圍
-- [ ] 將完整 Web 應用、資料模型、測試與文件推送至公開 GitHub repository
-- [ ] 驗證遠端提交並交付 GitHub repository 連結
+- [x] 盤點既有 Eat_will repository 與目前 Web 應用同步範圍
+- [x] 將完整 Web 應用、資料模型、測試與文件推送至公開 GitHub repository
+- [x] 驗證遠端提交並交付 GitHub repository 連結
