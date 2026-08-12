@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.8rem;
+  --background: oklch(0.965 0.019 87);
+  --foreground: oklch(0.27 0.055 250);
+  --card: oklch(0.99 0.012 88);
+  --card-foreground: oklch(0.27 0.055 250);
+  --popover: oklch(0.99 0.012 88);
+  --popover-foreground: oklch(0.27 0.055 250);
+  --primary: oklch(0.27 0.055 250);
+  --primary-foreground: oklch(0.98 0.018 88);
+  --secondary: oklch(0.92 0.035 85);
+  --secondary-foreground: oklch(0.31 0.05 250);
+  --muted: oklch(0.94 0.02 85);
+  --muted-foreground: oklch(0.5 0.04 250);
+  --accent: oklch(0.91 0.05 85);
+  --accent-foreground: oklch(0.31 0.05 250);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.84 0.045 84);
+  --input: oklch(0.84 0.045 84);
+  --ring: oklch(0.63 0.11 78);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; font-family: "Noto Sans TC", sans-serif; }
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]), [type="button"]:not(:disabled), [type="submit"]:not(:disabled), select:not(:disabled), input[type="checkbox"]:not(:disabled), input[type="radio"]:not(:disabled) { @apply cursor-pointer; }
+}
+
+@layer components {
+  .container { width: 100%; margin-inline: auto; padding-inline: 1rem; }
+  .flex { min-height: 0; min-width: 0; }
+  @media (min-width: 640px) { .container { padding-inline: 1.5rem; } }
+  @media (min-width: 1024px) { .container { max-width: 1280px; padding-inline: 2rem; } }
+}
+
+.font-serif { font-family: "Noto Serif TC", serif; }
+.sacred-grid { position: fixed; z-index: 0; inset: 0; pointer-events: none; opacity: .44; background-image: radial-gradient(circle at 12% 16%, transparent 0 98px, rgba(185,153,77,.18) 99px 100px, transparent 101px 151px, rgba(185,153,77,.11) 152px 153px, transparent 154px), radial-gradient(circle at 89% 70%, transparent 0 135px, rgba(185,153,77,.16) 136px 137px, transparent 138px 208px, rgba(185,153,77,.09) 209px 210px, transparent 211px), linear-gradient(30deg, transparent 49.75%, rgba(185,153,77,.055) 50%, transparent 50.25%); background-size: 390px 390px, 480px 480px, 36px 36px; }
+.hero-orbit { position: absolute; border: 1px solid rgba(185,153,77,.34); border-radius: 50%; pointer-events: none; }
+.hero-orbit-one { width: 290px; height: 290px; right: -88px; top: -126px; }
+.hero-orbit-two { width: 420px; height: 420px; right: -145px; top: -193px; border-color: rgba(185,153,77,.16); }
+.gold-select { transition: border-color 160ms cubic-bezier(.23,1,.32,1), box-shadow 160ms cubic-bezier(.23,1,.32,1); }
+.gold-select:focus { border-color: #ad8330; box-shadow: 0 0 0 3px rgba(173,131,48,.14); }
+
+@media (prefers-reduced-motion: no-preference) {
+  button { transition: transform 160ms cubic-bezier(.23,1,.32,1), background-color 160ms cubic-bezier(.23,1,.32,1), color 160ms cubic-bezier(.23,1,.32,1), border-color 160ms cubic-bezier(.23,1,.32,1); }
+  button:active { transform: scale(.97); }
+}
