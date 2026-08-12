@@ -26,12 +26,31 @@ const adviceSchema = z.object({
 });
 
 function buildSourcePacket(entries: Awaited<ReturnType<typeof listKnowledgeEntries>>, roles: Awaited<ReturnType<typeof listRoles>>, stageDetail: Awaited<ReturnType<typeof getConversationStage>>) {
-  const strategySources = entries.slice(0, 6).map((entry) => `【${entry.section}｜${entry.title}】${entry.content}`).join("\n");
+  const strategySources = entries.slice(0, 6).map((entry) => {
+    const attribution = entry.sourceName ? `來源：${entry.sourceName}` : "來源：平台課程知識庫";
+    const boundary = entry.sourceScope ? `使用邊界：${entry.sourceScope}` : "";
+    return `【${entry.section}｜${entry.title}】${entry.content}\n${attribution}${boundary ? `\n${boundary}` : ""}`;
+  }).join("\n");
   const roleSources = roles.map((role) => `【${role.name}】${role.strategy}`).join("\n");
   const stageSource = stageDetail
     ? `【${stageDetail.stage}｜第 ${stageDetail.layer} 層｜${stageDetail.coreFocus}】\n話題方向：${stageDetail.topicGuidance}\n注意事項：${stageDetail.cautions}`
     : "目前沒有對應局別層次資料。";
   return { strategySources, roleSources, stageSource };
+}
+
+function buildSourceReferences(entries: Awaited<ReturnType<typeof listKnowledgeEntries>>) {
+  return entries.slice(0, 10).map((entry) => ({
+    title: entry.title,
+    sourceName: entry.sourceName,
+    sourceUrl: entry.sourceUrl,
+    sourceScope: entry.sourceScope,
+  }));
+}
+
+export function selectAdviceEntries<T extends { category: string }>(entries: T[]) {
+  const courseEntries = entries.filter((entry) => entry.category !== "研究補充").slice(0, 4);
+  const auxiliaryEntries = entries.filter((entry) => entry.category === "研究補充").slice(0, 3);
+  return [...courseEntries, ...auxiliaryEntries];
 }
 
 export function parseAdviceResponse(raw: string) {
@@ -100,8 +119,9 @@ export const adviceRouter = router({
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "目前沒有足以生成建議的知識庫條目。" });
     }
 
-    const sources = buildSourcePacket(entries, roles, stageDetail);
-    const fallback = createKnowledgeFallback(input, entries, roles, stageDetail);
+    const adviceEntries = selectAdviceEntries(entries);
+    const sources = buildSourcePacket(adviceEntries, roles, stageDetail);
+    const fallback = createKnowledgeFallback(input, adviceEntries, roles, stageDetail);
     try {
       const raw = await withTimeout((async () => {
         const catalog = await listLLMModels();
@@ -152,7 +172,8 @@ export const adviceRouter = router({
       const parsed = parseAdviceResponse(raw);
       return {
         ...parsed,
-        sourceTitles: entries.slice(0, 10).map((entry) => entry.title),
+        sourceTitles: adviceEntries.map((entry) => entry.title),
+        sourceReferences: buildSourceReferences(adviceEntries),
         sourceStage: { stage: stageDetail.stage, layer: stageDetail.layer, coreFocus: stageDetail.coreFocus },
       };
     } catch (error) {
@@ -161,7 +182,8 @@ export const adviceRouter = router({
       });
       return {
         ...fallback,
-        sourceTitles: entries.slice(0, 10).map((entry) => entry.title),
+        sourceTitles: adviceEntries.map((entry) => entry.title),
+        sourceReferences: buildSourceReferences(adviceEntries),
         sourceStage: { stage: stageDetail.stage, layer: stageDetail.layer, coreFocus: stageDetail.coreFocus },
       };
     }

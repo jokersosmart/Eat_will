@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createKnowledgeFallback, parseAdviceResponse } from "./routers/advice";
+import { createKnowledgeFallback, parseAdviceResponse, selectAdviceEntries } from "./routers/advice";
 
 describe("智慧建議結構化輸出", () => {
   it("接受 JSON 程式碼區塊並將過多建議截取為介面可讀範圍", () => {
@@ -38,5 +38,16 @@ describe("智慧建議結構化輸出", () => {
     expect(fallback.suggestedTopics[0]?.reasoning).toContain("飯局最低與最高目標");
     expect(fallback.roleStrategy[0]?.role).toBe("主持人");
     expect(fallback.postDinnerSummary).toContain("尚未提供局後筆記");
+  });
+
+  it("保留課程條目並加入研究補充，避免只使用單一資料來源", () => {
+    const entries = [
+      { category: "目標設定", title: "課程 1" },
+      { category: "做局原則", title: "課程 2" },
+      { category: "研究補充", title: "研究 1" },
+      { category: "研究補充", title: "研究 2" },
+    ];
+
+    expect(selectAdviceEntries(entries).map((entry) => entry.title)).toEqual(["課程 1", "課程 2", "研究 1", "研究 2"]);
   });
 });
