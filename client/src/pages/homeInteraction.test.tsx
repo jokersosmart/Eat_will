@@ -29,6 +29,15 @@ vi.mock("@/lib/trpc", () => {
       { title: "探索時使用一問一反映一確認", sourceName: "Center for Creative Leadership｜Active Listening Techniques", sourceUrl: "https://www.ccl.org/articles/leading-effectively-articles/coaching-others-use-active-listening-skills/", sourceScope: "不可把推測當成事實。" },
     ],
   };
+  const scenarioResult = {
+    knownContext: ["飯局條件：5-8人／中式合菜／晚餐。", "尚未填寫明確飯局目標。"],
+    assumptions: ["尚未確認這一局最重要的收穫；先設定一個可確認的下一步。"],
+    clarificationQuestions: [{ question: "你希望這一局結束時，留下哪一個可被確認的下一步？", reason: "可收束成行動檢查點。", field: "objective" as const }],
+    attentionPoints: ["避免過早推進。"],
+    nextStep: "先回答第一題。",
+    sourceTitles: ["既有課程條目", "探索時使用一問一反映一確認"],
+    sourceReferences: [],
+  };
   return {
     trpc: {
       knowledge: {
@@ -43,7 +52,10 @@ vi.mock("@/lib/trpc", () => {
         saveRecord: { useMutation: mutationResult },
         savePreferences: { useMutation: mutationResult },
       },
-      advice: { generate: { useMutation: () => ({ data: adviceResult, isPending: false, mutate: vi.fn() }) } },
+      advice: {
+        generate: { useMutation: () => ({ data: adviceResult, isPending: false, mutate: vi.fn() }) },
+        assessScenario: { useMutation: () => ({ data: scenarioResult, isPending: false, mutate: vi.fn() }) },
+      },
     },
   };
 });
@@ -94,7 +106,7 @@ describe("模擬飯局範例按鈕", () => {
     expect(sourceLink.getAttribute("href")).toBe("https://www.ccl.org/articles/leading-effectively-articles/coaching-others-use-active-listening-skills/");
     expect(screen.getByText("本次研究補充來源")).not.toBeNull();
     expect(screen.getByText("使用邊界：不可把推測當成事實。")).not.toBeNull();
-    expect(screen.getByText(/依據條目：既有課程條目、探索時使用一問一反映一確認/)).not.toBeNull();
+    expect(screen.getAllByText(/依據條目：既有課程條目、探索時使用一問一反映一確認/).length).toBeGreaterThan(0);
     expect(screen.queryByRole("link", { name: /既有課程條目/ })).toBeNull();
   });
 
@@ -104,5 +116,18 @@ describe("模擬飯局範例按鈕", () => {
 
     expect(screen.getByRole("heading", { name: "把底層邏輯留在桌上" })).not.toBeNull();
     expect(screen.getByRole("link", { name: /Center for Creative Leadership/ })).not.toBeNull();
+  });
+
+  it("呈現情境假設、釐清問題與注意事項，並可將問題帶入飯局目標", async () => {
+    const user = userEvent.setup();
+    render(<Home />);
+
+    expect(screen.getByRole("heading", { name: "先釐清，再推進" })).not.toBeNull();
+    expect(screen.getByText("可修正的情境假設")).not.toBeNull();
+    expect(screen.getByText("注意事項")).not.toBeNull();
+    await user.click(screen.getByRole("button", { name: "帶入飯局目標欄" }));
+
+    expect((screen.getByPlaceholderText(/認識對方的決策考量/) as HTMLTextAreaElement).value).toContain("待確認：你希望這一局結束時");
+    expect(screen.getByText(/已帶入飯局目標欄/)).not.toBeNull();
   });
 });
