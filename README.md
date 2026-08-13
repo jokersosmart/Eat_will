@@ -48,7 +48,7 @@ pnpm test
 pnpm dev
 ```
 
-資料庫 schema 與資料遷移方式請參考 `drizzle/`。完整產品範圍請見 [`docs/MVP_SPEC.md`](docs/MVP_SPEC.md)，新手引導設計請見 [`docs/NEWCOMER_GUIDANCE.md`](docs/NEWCOMER_GUIDANCE.md)。
+資料庫 schema 與資料遷移方式請參考 `drizzle/`。若要理解產品定位、現有能力、可調整位置與後續應用方向，請先閱讀 [`docs/PRD.md`](docs/PRD.md)。功能範圍請見 [`docs/MVP_SPEC.md`](docs/MVP_SPEC.md)，情境引導規則請見 [`docs/SCENARIO_GUIDANCE_SPEC.md`](docs/SCENARIO_GUIDANCE_SPEC.md)，新手引導設計請見 [`docs/NEWCOMER_GUIDANCE.md`](docs/NEWCOMER_GUIDANCE.md)。
 
 ## 授權與歸屬
 
