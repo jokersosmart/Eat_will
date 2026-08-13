@@ -57,6 +57,7 @@
 - [x] 盤點現有功能、資料模型、設定位置與文件狀態，建立 PRD 的事實基礎
 - [x] 撰寫產品需求文件，涵蓋定位、使用者旅程、現有能力、可調整位置與應用方向
 - [x] 對照程式與設定驗證 PRD，補充開發、測試與發布指引
-- [ ] 將 PRD 與相關文件同步至公開 GitHub repository，並回報文件連結
-- [ ] 提交並推送 docs/PRD.md、README.md 與待辦更新至公開 main 分支
-- [ ] 驗證公開 main 分支含 PRD，並提供可直接存取的文件連結
+- [x] 將 PRD 與相關文件同步至公開 GitHub repository，並回報文件連結
+- [x] 提交並推送 docs/PRD.md、README.md 與待辦更新至公開 main 分支
+- [x] 驗證公開 main 分支含 PRD，並提供可直接存取的文件連結
+- [x] 向使用者交付公開 PRD 連結、repository 連結與最新文件提交識別碼
